@@ -7,3 +7,4 @@
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
 User.create([{name:"Ajou_Univ_Admin", email:"likelion.aju@gmail.com", password:"likelion.au"}, {name:"Ajou_APLUS", email:"aplus@ajou.ac.kr", password:"ajou_aplus"}])
+Realtime.create(Title: 'Title test', Content: 'content')
