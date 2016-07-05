@@ -1,0 +1,542 @@
+<div class='toast_msg' style="display:none;"><i class="material-icons">wifi</i>&nbsp;&nbsp;[실시간 | <%= @realtime.Title %>]<br><%= @realtime.Content %></div>
+<script>var initLEDId = <%= @realtime.id %></script>
+<div class="navbar-fixed">
+  <nav class="light-blue lighten-2" role="navigation" id="nav-normal">
+    <div class="nav-wrapper container">
+      <a id="logo-container" href="/" class="brand-logo"><img src="<%= image_url 'ajou_fest.png' %>"></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a class="white-text" href="/day/25"><strong>축제 지도</strong></a></li>
+        <li><a class="white-text" href="#lineup">라인업</a></li>
+        <li><a class="white-text" href="#bar">주점 리스트</a></li>
+        <li><a class="white-text" href="#poster">포스터</a></li>
+        <li><a class="white-text" href="#market">부스 리스트</a></li>
+        <li><a class="white-text" href="/credit">소개</a></li>
+      </ul>
+    </div>
+ </nav>
+ 
+ <nav class="light-blue lighten-2" role="navigation" id="nav-mobile">
+    <div class="nav-wrapper container">
+      <div class="row">
+        <div class="col s2 m2"><a class="white-text" href="/"><i class="material-icons eye">home</i></a></div>
+        <div class="col s2 m2"><a class="white-text" href="/day/25"><i class="material-icons eye">place</i></a></div>
+        <div class="col s2 m2"><a class="white-text" href="#lineup"><i class="material-icons">mic</i></a></div>
+        <div class="col s2 m2"><a class="white-text" href="#bar"><i class="material-icons eye">local_bar</i></a></div>
+        <div class="col s2 m2"><a class="white-text" href="#market"><i class="material-icons">store</i></a></div>
+        <div class="col s2 m2"><a class="white-text" href="#poster"><i class="material-icons eye">photo</i></a></div>
+      </div>
+    </div>
+  </nav>
+</div>
+
+<section id="introduction">
+  <div id="index-banner" class="parallax-container">
+    <div class="section">
+      <div class="container alpha-background" style='margin-top:50px;'>
+        <h1 class="header center teal-text white-text">아주대학교 2016 대동제</h1>
+        <div class="row center">
+          <h5 class="header col s12 light">다가오는 25일부터 27일까지 개최됩니다.</h5>
+        </div>
+        <div class="row center">
+          <a href="/day" id="download-button" class="btn-large waves-effect waves-light light-blue lighten-1">지도 보기</a>
+          <a href="/credit" id="download-button" class="btn-large waves-effect waves-light light-blue lighten-1">소개</a>
+        </div>
+        <br><br>
+      </div>
+    </div>
+    <div class="parallax"><%= image_tag 'http://www.v2030.net/data/board/m1s3/file_in_body/1/2c5a9b1e2baafc8af_dsc01473.JPG' %></div>
+  </div>
+</section>
+<a id="list"></a>
+
+<section>
+  <div class="container">
+    <div class="section">
+      <div class="row">
+        <h1 class="header center orange-text">부스 및 주점</h1>
+      </div>
+      <div class="row center">
+        <div class="col s12 m6 l6">
+          <a id="a_tag_color" href="#market">  <h2><%= @booth %></h2>개의 부스 </a>
+        </div>
+        <div class="col s12 m6 l6">
+          <a id="a_tag_color" href="#bar"><h2><%= @beer %></h2>개의 주점 </a>
+        </div>
+      </div>
+      <div class="divider"></div>
+    </div>
+  </div>  
+  
+  <!--///////////////////////////////////////////////////////////////////////////////////////-->
+  <div class="container">
+    <div class="section">
+      <div class="row">
+     
+      
+        <div class="col s12 center">
+          
+          <h1 id="market_information" class="orange-text">주목받는 주점 및 부스</h1>
+          
+             <div class="col s12 m6 l6">
+          <h1>
+            <i class="material-icons icon_20 orange-text">store</i>
+          </h1>
+           
+             <div class="col s12 m12">
+           <% i=1 %>
+           <% @booth_rank.each do |d| %>
+               <div class="col s12 m12 l12">
+                <div class="card" id="rank_booth_<%=i%>">
+                  <div class="card-content">
+                    <div class="row center">
+                      <div class="col m4 l4 s1">
+                        <%=image_tag "https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/medals/medal"+i.to_s+".png", width:'20rem', class:'left' %>
+                      </div>
+                      <div class="col m4 l4 s10" align="center">
+                         <span class="card-title activator grey-text text-darken-4 market_click truncate" onclick="increment(<%= d.id %>);"><%= d.title %></span>
+                       </div>
+                      <div class="col m4 l4 s1">
+                       <h6 class="activator right love" style="color:#039be5; padding-top:2px; padding-right:10px;">자세히</h6>
+                       </div>
+                    </div>
+                    <div class="row center">
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                    </div>
+                  </div>
+                  <div class="card-reveal">
+                    <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                       <div class="col m1 l1 s1"><a ontouchend="booth_close(this, <%= d.id %>);" onclick="booth_close(this, <%= d.id %>);"><i class="material-icons right">close</i></a></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+                
+                <% i=i+1 %>
+          <% end %>
+          </div>
+          
+           </div>
+           
+         <div class="col s12 m6 l6">
+          <h1>
+            <i class="material-icons icon_20 orange-text">local_bar</i>
+          </h1>
+           
+             <div class="col s12 m12">
+            <% i=1 %>
+           <% @beer_rank.each do |d| %>
+               <div class="col s12 m12 l12">
+                <div class="card" id="rank_beer_<%=i%>">
+                  <div class="card-content">
+                    
+                    <div class="row center">
+                    
+                       <div class="col m4 l4 s1 ">
+                         <%= image_tag "https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/medals/medal"+i.to_s+".png", width:'20rem', class:'left'%>
+                        </div>
+                        
+                        <div class="col m4 l4 s10" align="center">
+                          <span class="card-title activator grey-text text-darken-4 market_click truncate" onclick="increment(<%= d.id %>);"><%= d.title%></span>
+                        </div>
+                        
+                        <div class="col m4 l4 s1">
+                         <h6 class="activator right love" style="color:#039be5;padding-top:2px; padding-right:10px;">자세히</h6></span>
+                        </div>
+                        
+                    </div>
+                      
+                    <div class="row center">
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                    </div>
+                  </div>
+                  <div class="card-reveal">
+                     <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                      <div class="col m1 l1 s1"><i class="material-icons right">close</i></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+                <% i=i+1 %>
+          <% end %>
+          </div>
+          
+           </div>
+        </div>  
+        
+       
+         
+      </div>
+    </div>
+  </div>
+  <!--///////////////////////////////////////////////////////////////////////////////////////-->
+</section>
+
+
+
+
+
+<a id="lineup"></a>
+<section>
+  <div id="years_lineup" class="parallax-container valign-wrapper">
+    <div class="section no-pad-bot">
+      <div class="container alpha-background">
+        <div class="row center">
+          <h2 id="minji_minji" class="header col s12 light orange-text">라인업</h2>
+          <div class="divider"></div>
+          <div class="col s12 m4 l4 lu">
+            <%= image_tag 'Day1.PNG', width:"180rem" %>
+          </div>
+          <div class="col s12 m4 l4 lu">
+            <%= image_tag 'Day2.PNG', width:"180rem" %>
+          </div>
+          <div class="col s12 m4 l4 lu">
+            <%= image_tag 'Day3.PNG', width:"180rem" %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="parallax">
+      <%= image_tag 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/lineup.png' %>
+
+    </div>
+  </div> 
+</section>
+
+
+<a id="bar"></a>
+<section>
+  <div class="container">
+    <div class="section">
+      <div class="row">
+        <div class="col s12 center">
+          <h1 id="market_information" class="orange-text">주점 리스트</h1>
+          <p class="left-align light"></p>
+          
+           <div class="row">
+              <div class="col s12">
+                <ul class="tabs">
+                  <li class="tab col s3"><a href="#bar_test1">25일</a></li>
+                  <li class="tab col s3"><a href="#bar_test2">26일</a></li>
+                  <li class="tab col s3"><a href="#bar_test3">27일</a></li>
+                </ul>
+              </div>
+            </div>
+            
+          <div class="row center" id="bar_test1">  
+            <% @beer_list.where(date:25).each do |d| %>
+              <div class="col s12 m6 l6">
+                <div class="card">
+                  
+                  <div class="card-content">
+                     <div class="row center">
+                      <div class="col m11 l11 s11" align="center">
+                       <span class="card-title activator grey-text text-darken-4 market_click" id="<%=d.id%>" onclick="increment(<%= d.id %>);"><%= d.title %></span>
+                      </div>
+                      <div class="col m1 l1 s1">
+                       <h6 class="activator right love" style="color:#039be5;">자세히</h6>
+                      </div>
+                      
+                       
+                       </div>
+                      <div class="row center">   
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                      </div>
+                  </div> <!--card-content-->
+                  <div class="card-reveal">
+                   <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                      <div class="col m1 l1 s1"><i class="material-icons right">close</i></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <div class="row center" id="bar_test2">  
+            <% @beer_list.where(date:26).each do |d| %>
+             <div class="col s12 m6 l6">
+                <div class="card">
+                  
+                  <div class="card-content">
+                     <div class="row center">
+                      <div class="col m11 l11 s11" align="center">
+                       <span class="card-title activator grey-text text-darken-4 market_click" id="<%=d.id%>" onclick="increment(<%= d.id %>);"><%= d.title %></span>
+                      </div>
+                      <div class="col m1 l1 s1">
+                       <h6 class="activator right love" style="color:#039be5;">자세히</h6>
+                      </div>
+                      
+                       
+                       </div>
+                      <div class="row center">   
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                      </div>
+                  </div> <!--card-content-->
+                  <div class="card-reveal">
+                    <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                      <div class="col m1 l1 s1"><i class="material-icons right">close</i></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+         <div class="row center" id="bar_test3">  
+            <% @beer_list.where(date:27).each do |d| %>
+              <div class="col s12 m6 l6">
+                <div class="card">
+                  
+                  <div class="card-content">
+                     <div class="row center">
+                      <div class="col m11 l11 s11" align="center">
+                       <span class="card-title activator grey-text text-darken-4 market_click" id="<%=d.id%>" onclick="increment(<%= d.id %>);"><%= d.title %></span>
+                      </div>
+                      <div class="col m1 l1 s1">
+                       <h6 class="activator right love" style="color:#039be5;">자세히</h6>
+                      </div>
+                      
+                       
+                       </div>
+                      <div class="row center">   
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                      </div>
+                  </div> <!--card-content-->
+                  <div class="card-reveal">
+                     <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                      <div class="col m1 l1 s1"><i class="material-icons right">close</i></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<a id="poster"></a>
+<section>
+  <div class="parallax-container valign-wrapper poster">
+                <div class="section no-pad-bot poset_box">
+                     <div class="carousel" >
+                          <a class="carousel-item poster_img" href="#two!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/poster2.PNG'%>></a>
+                          <a class="carousel-item poster_img" href="#three!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/poster3.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/poster4.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EB%82%AE%EB%B6%80%EC%8A%A4_Havesome.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EB%82%AE%EB%B6%80%EC%8A%A4_VR.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EB%82%AE%EB%B6%80%EC%8A%A4_%EA%B0%84%ED%98%B8%EB%8C%80.png'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EB%82%AE%EB%B6%80%EC%8A%A4_%EA%B5%BF%ED%86%A0%ED%94%BC%EC%95%84.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EB%82%AE%EB%B6%80%EC%8A%A4_%EC%88%98%EB%B9%84%EB%93%9C.png'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EB%82%AE%EB%B6%80%EC%8A%A4_%ED%95%AB%EB%8F%84%EA%B7%B8%EC%9E%A5%EC%9D%B8.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_PTP.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_RPM.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EA%B0%84%ED%98%B8%EB%8C%80.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EA%B2%BD%EC%98%81%EB%8C%80.png'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EA%B8%88%EA%B3%B5%ED%95%99%EC%83%9D%ED%9A%8C.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EB%B3%BC%EB%9E%9C%EB%93%9C.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EB%B9%84%EC%8A%A4%ED%8A%B8%EB%A1%9C.png'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EC%82%B0%EA%B3%B5.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EC%8B%AC%EB%A6%AC%ED%95%99%EA%B3%BC.jpeg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EC%95%8C%EC%BD%9C%EB%A1%9C%EC%82%AC%EB%8A%94%EC%82%AC%EB%9E%8C%EB%93%A4.PNG'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EC%95%BC%ED%95%99.png'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EC%9D%98%EA%B3%BC%EB%8C%80.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EB%88%84%EB%B9%84%EC%95%84%EC%A3%BC.jpg'%>></a>
+                          <a class="carousel-item poster_img" href="#four!"><img src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/poster/%EC%A3%BC%EC%A0%90_%EC%9C%A0%EC%8A%A4%ED%98%B8%EC%8A%A4%ED%85%94.jpg'%>></a>
+                       </div>
+                </div> 
+     <div class="parallax" style="background-color:#263238;"></div>
+ 
+  </div>
+</section>  
+
+
+<a id="market"></a>
+<section>
+  <div class="container">
+    <div class="section">
+      <div class="row">
+        <div class="col s12 center">
+          <h1 id="market_information" class="orange-text">부스 리스트</h1>
+          <p class="left-align light"></p>
+          
+           <div class="row">
+              <div class="col s12">
+                <ul class="tabs">
+                  <li class="tab col s3"><a href="#market_test1">25일</a></li>
+                  <li class="tab col s3"><a href="#market_test2">26일</a></li>
+                  <li class="tab col s3"><a href="#market_test3">27일</a></li>
+                </ul>
+              </div>
+            </div>
+         </div>
+        <div class="row center" id="market_test1">
+            <% @booth_list.where(date:25).each do |d| %>
+              <div class="col s12 m6 l6">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row center">
+                      <div class="col m11 l11 s11" align="center">
+                       <span class="card-title activator grey-text text-darken-4 market_click truncate" id="<%=d.id%>" onclick="increment(<%= d.id %>);"><%= d.title %></span>
+                      </div>
+                      <div class="col m1 l1 s1">
+                       <h6 class="activator right love" style="color:#039be5;">자세히</h6>
+                      </div>
+                    </div>
+                    <div class="row center">
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                    </div>
+                  </div>
+                  <div class="card-reveal">
+                    <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                      <div class="col m1 l1 s1"><i class="material-icons right">close</i></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <div class="row center" id="market_test2">
+            <% @booth_list.where(date:26).each do |d| %>
+             <div class="col s12 m6 l6">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row center">
+                      <div class="col m11 l11 s11" align="center">
+                       <span class="card-title activator grey-text text-darken-4 market_click truncate" id="<%=d.id%>" onclick="increment(<%= d.id %>);"><%= d.title %></span>
+                      </div>
+                      <div class="col m1 l1 s1">
+                       <h6 class="activator right love" style="color:#039be5;">자세히</h6>
+                      </div>
+                    </div>
+                    <div class="row center">
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                    </div>
+                  </div>
+                  <div class="card-reveal">
+                   <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                      <div class="col m1 l1 s1"><i class="material-icons right">close</i></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+          <div class="row center" id="market_test3">
+            <% @booth_list.where(date:27).each do |d| %>
+             <div class="col s12 m6 l6">
+                <div class="card">
+                  <div class="card-content">
+                    <div class="row center">
+                      <div class="col m11 l11 s11" align="center">
+                       <span class="card-title activator grey-text text-darken-4 market_click truncate" id="<%=d.id%>" onclick="increment(<%= d.id %>);"><%= d.title %></span>
+                      </div>
+                      <div class="col m1 l1 s1">
+                       <h6 class="activator right love" style="color:#039be5;">자세히</h6>
+                      </div>
+                    </div>
+                    <div class="row center">
+                        <div class="col s6 m6 l6" style="color:#aaaaaa;"><i class="material-icons eye">remove_red_eye</i><br><span id="like_num<%=d.id%>"><%= d.like %></span></br></div>
+                        <div class="col s6 m6 l6"><p onclick="map_func(<%= d.id %>);"><i class="material-icons map" style="color:#aaaaaa;">place</i><a class="market_click" href="#"><br>지도로 가기</br></a></p></div>
+                    </div>
+                  </div>
+                  <div class="card-reveal">
+                    <div class="row">
+                      <div class="col m11 l11 s11 card-title grey-text text-darken-4"><%= d.title %></div>
+                      <div class="col m1 l1 s1"><i class="material-icons right">close</i></div>
+                    </div>
+                    <div class="row">
+                      <p><%= d.menu %></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<footer class="page-footer teal Ssang" id="footer_font">
+  <div class="container">
+    <div class="row">
+      <div class="col s12 m6">
+        <span><h5><a class="white-text introduce_link" href="/credit">멋쟁이사자처럼 at 아주대학교 소개<i class="material-icons touch_icon">reply</i></a></h5></span>
+        <div class="row">
+        <div class="col s5 m5">
+        <img class="lion-logo right" src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/lion-logo.png'%> >
+        </div>
+        <div class="col s1 m1">
+        <h2 class="white-text">X</h2> 
+        </div>
+        <div class="col s5 m5">
+        <img class="lion-logo left" src=<%=image_url 'https://s3.ap-northeast-2.amazonaws.com/ajou-festival-2016/images/APlus.png'%>  width="130rem" height="120rem">
+        </div>
+      </div>
+      </div>
+      <div class="col s12 m6">
+        <h5 class="white-text">아주대학교 대동제 정보 웹 서비스 개발팀</h5>
+        <p>
+          <ul>
+            <li class="white-text">전지원(미디어)</li>
+            <li class="white-text">김재현(미디어)</li>
+            <li class="white-text">김경림(미디어)</li>
+            <li class="white-text">나민지(소프트웨어)</li>
+            <li class="white-text">김명선(경영)</li>
+            <li class="white-text">강윤정(경영)</li>
+            <li class="white-text">강두훈(경영)</li>
+          </ul>
+        </p>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-copyright">
+    <div class="container">
+      <div class="row">
+        <a class="white-text text-lighten-3" href="/credit"> &copy; 2016 likeLion (멋쟁이사자처럼) at 아주대학교</a>&nbsp;&nbsp;
+        <a href="http://likelion.net"><img src="http://class.likelion.net/assets/logo-d68044b756355cb5d3075a8ecc3f3f31190a51a5130423ecdb5f39b452556425.png" width="80vw"></a>
+      </div>
+    </div>
+  </div>
+</footer>

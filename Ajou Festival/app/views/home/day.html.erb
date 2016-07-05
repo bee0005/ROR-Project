@@ -1,0 +1,45 @@
+<div class="navigation row">
+    <div class="left date">
+        <span class="white-text" style="font-size:2rem;"><%= @date %>일 낮</span>
+    </div>
+    <div class="right">
+        <a href="/"><button id="btn-menu" class="btn btn-small"><i class="material-icons">home</i></button></a>
+        <a onclick="modeReplace('/night/<%= request.path.split('/').last %>')" ontouchend="modeReplace('/night/<%= request.path.split('/').last %>')"><button id="btn-night" class="btn btn-small"><i class="material-icons">brightness_2</i></button></a>
+        <a href="/credit"><button class="btn btn-small">?</button></a>
+    </div>
+    <div align="right">
+        <% if @date.to_i == 26 then %>
+            <a href="/day/25"><button class="btn btn-small">25일</button></a>
+            <a href="/day/27"><button class="btn btn-small">27일</button></a>
+        <% elsif @date.to_i < 26 %>
+            <a href="/day/26"><button class="btn btn-small">26일</button></a>
+            <a href="/day/27"><button class="btn btn-small">27일</button></a>
+        <% else %>
+            <a href="/day/25"><button class="btn btn-small">25일</button></a>
+            <a href="/day/26"><button class="btn btn-small">26일</button></a>
+        <% end %>
+    </div>
+</div>
+<div class="toast_msg_map"><i class="material-icons">done</i>&nbsp;&nbsp;지도를 드래그하여 축제 정보를 확인하세요.</div>
+<div class='toast_msg' style="display:none;"></div>
+<script>var initLEDId = <%= @realtime.id %></script>
+<div class="day">
+    <div id="info_container">
+        <% @day.each do |data| %>
+        <div class="booth booth<%= data.id %>" style="top:<%= data.x_loc+1 %>em;left:<%= data.y_loc %>em;">
+            <div class="pin-body_<%= data.id %> pin-body card card-padding">
+                <div class="pin-content">
+                    <h5 class="orange-text"><%= data.title %></h5>
+                    <div class="divider"></div>
+                   
+                </div>
+                <div class="pin-close"><a ontouchend="booth_close(this, <%= data.id %>);" onclick="booth_close(this, <%= data.id %>);"><i class="material-icons">clear</i></a></div>
+            </div>
+            <a ontouchend="booth_show(this, <%= data.id %>);" onclick="booth_show(this, <%= data.id %>);" class="pin" ><img src="<%= image_url 'pins/pin.png' %>" id="pin_off_<%= data.id %>"></a>
+        </div>
+        <% end %>
+        <%= image_tag 'ajou_fest.png', height:'100rem' %>
+        <div class="divider"></div>
+        <%= image_tag 'map/daymapfinal.png', width:"800rem", height:"auto", class:"map zoom", id:"map" %>
+    </div>
+</div>
